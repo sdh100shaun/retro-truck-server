@@ -4,7 +4,7 @@ import * as socketIo from "socket.io";
 import { Truck } from "./model/truck.model";
 
 export class RetroServer {
-  public static readonly PORT: number = 8080;
+  public static readonly PORT: number = 80;
   private app: express.Application;
   private server: Server;
   private io: SocketIO.Server;

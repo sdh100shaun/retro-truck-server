@@ -50,7 +50,7 @@ var RetroServer = /** @class */ (function () {
     RetroServer.prototype.getApp = function () {
         return this.app;
     };
-    RetroServer.PORT = 8080;
+    RetroServer.PORT = 80;
     return RetroServer;
 }());
 exports.RetroServer = RetroServer;
