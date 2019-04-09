@@ -1,0 +1,11 @@
+{
+  "files": [
+    "./src/server/index.ts",
+    "./src/server/retro-server.ts",
+    "./src/server/model/truck.model.ts",
+    "./src/server/model/user.model.ts"
+  ],
+  "compilerOptions": {
+    "target": "es5"
+  }
+}

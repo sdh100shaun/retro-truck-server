@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Truck Retro</title>
+    <link href="main.css" rel="stylesheet"/>
+  </head>
+
+  <body>
+
+    <div class="overlay">
+      <div class="overlay-inner">
+        <button class="close">× Close</button>
+        <img/>
+        <div>
+          <form>
+            <select id="truck-select" class="select-css">
+              <option value="" selected="true">--Please choose an option--</option>
+              <option value="Sprint">this describes this sprint</option>
+              <option value="Best">this is the bestest truck of all</option>
+            </select>
+            <button action="submit" class="choose">I want that one</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <header>
+      <h1> VOL Truck Retro </h1>
+      <div>
+        <p class="title"></p>
+      </div>
+    </header>
+
+    <section class="gallery"></section>
+    <script src="./socketio/socket.io.js"></script>
+    <script>
+      var baseUrl = 'http://a6ee9f7e.ngrok.io';
+      var socket = io.connect(baseUrl);
+      socket.on('connect', function (data) {});
+    </script>
+    <script>
+      const gallery = document.querySelector('.gallery');
+      const overlay = document.querySelector('.overlay');
+      const overlayImage = overlay.querySelector('img');
+      const overlayClose = overlay.querySelector('.close');
+      const chooseButton = overlay.querySelector(".choose");
+      const queryParams = new URLSearchParams(location.search);
+
+      var updateTitle = function (title) {
+        let welcomeMsg = "Welcome {{title}}. Click to select a truck";
+        document
+          .querySelector(".title")
+          .innerHTML = welcomeMsg.replace("{{title}}", title);
+      };
+
+      var generateHTML = function ([h, v]) {
+        return `
+        <div class="item h${h} v${v}">
+          <img src="images/${randomNumber(26)}.PNG">
+          <div class="item__overlay">
+            <button class="heart">View →</button>
+          </div>
+        </div>
+      `;
+      }
+
+      var randomNumber = function (limit) {
+        return Math.floor(Math.random() * limit) + 1;
+      }
+
+      var handleClick = function (e) {
+        const src = e
+          .currentTarget
+          .querySelector('img')
+          .src;
+        overlayImage.src = src;
+        overlay
+          .classList
+          .add('open');
+      }
+
+      var close = function () {
+        overlay
+          .classList
+          .remove('open');
+      }
+
+      const digits = Array
+        .from({
+          length: 60
+        }, () => [randomNumber(4), randomNumber(4)])
+        .concat([
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ],
+          [
+            1, 1
+          ]
+        ])
+
+      const html = digits
+        .map(generateHTML)
+        .join('');
+      gallery.innerHTML = html;
+
+      const items = document.querySelectorAll('.item');
+
+      items.forEach(item => item.addEventListener('click', handleClick));
+
+      overlayClose.addEventListener('click', close);
+      chooseButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        var data = {
+          "id": overlayImage.src,
+          "type": document.querySelector("#truck-select").value,
+          "owner": queryParams.get('user')
+        };
+        socket.emit(document.querySelector("#truck-select").value, data);
+        overlayClose.click();
+      })
+      window.addEventListener('load', function (e) {
+        updateTitle(queryParams.get('user'));
+        socket.emit('join', {
+          "id": baseUrl + ":8090/images/1.PNG",
+          "type": "join",
+          "owner": queryParams.get('user')
+        });
+      })
+    </script>
+  </body>
+
+</html>
